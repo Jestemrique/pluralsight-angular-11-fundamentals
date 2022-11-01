@@ -1,8 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { outputAst } from "@angular/compiler";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { FormControl, FormControlOptions, FormGroup, Validators } from "@angular/forms";
 import { ISession, restrictedWords } from "../shared/index";
 
 @Component({
+    selector: 'create-session',
     templateUrl: './create-session.component.html',
     styles: [`
     em { float: right; color: #E05C65; padding-left: 10px;}
@@ -14,6 +16,8 @@ import { ISession, restrictedWords } from "../shared/index";
   `]
 })
 export class CreateSessionComponent implements OnInit {
+  @Output() saveNewSession = new EventEmitter();
+  @Output() cancelAddSession = new EventEmitter();
 
     newSessionForm!: FormGroup;
     name!: FormControl;
@@ -23,6 +27,10 @@ export class CreateSessionComponent implements OnInit {
     abstract!: FormControl;
 
     ngOnInit(): void {
+
+
+
+
         this.name = new FormControl('', Validators.required);
         this.presenter = new FormControl('', Validators.required);
         this.duration = new FormControl('', Validators.required);
@@ -46,7 +54,7 @@ export class CreateSessionComponent implements OnInit {
 //               .map(w => control.value.includes(w) ? w : null)
 //               .filter(w => w != null)
 
-//         return invalidWords && invalidWords.length >0 
+//         return invalidWords && invalidWords.length >0
 //           ? {'restrictedWords': invalidWords.join(', ')}
 //           : null
 //     }
@@ -61,9 +69,12 @@ export class CreateSessionComponent implements OnInit {
             presenter: formValues.presenter,
             abstract: formValues.abstract,
             voters: [],
-            
-        }
 
-        console.log(session);
+        }
+        this.saveNewSession.emit(session);
+    }
+
+    cancel() {
+      this.cancelAddSession.emit();
     }
 }
