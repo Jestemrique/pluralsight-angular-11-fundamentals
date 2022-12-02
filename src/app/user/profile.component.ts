@@ -41,6 +41,7 @@ export class ProfileComponent implements OnInit{
     if ( this.profileForm.valid) {
       this.authService.updateCurrentUser(formValues.firstName, formValues.lastName);
       this.toastr.success('Profile Saved')
+
     }
 
   }

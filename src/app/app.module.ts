@@ -18,15 +18,16 @@ import {
 
 import { EventsAppComponent } from './events-app.component';
 import { NavBarComponent } from './nav/navbar.component';
-import { TOASTR_TOKEN, Toastr } from './common/toastr.service';
+import { JQ_TOKEN, TOASTR_TOKEN, Toastr, CollapsibleWellComponent, SimpleModalComponent, ModalTriggerDirective } from './common/index';
 import { appRoutes } from './routes';
 import { Error404Component } from './errors/404.component';
 import { AuthService } from './user/auth.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CollapsibleWellComponent } from './common/collapsible-well.component';
 
-declare let toastr: Toastr;
-//let toastr:Toastr = window['toastr'];
+//Solution to error is to cast window object as any.
+//https://stackoverflow.com/questions/42193262/element-implicitly-has-an-any-type-because-type-window-has-no-index-signatur
+let toastr:Toastr = window as any['toastr'];
+let jQuery = window as any['$'];
 
 @NgModule({
   declarations: [
@@ -39,8 +40,13 @@ declare let toastr: Toastr;
     Error404Component,
     CreateSessionComponent,
     SessionListComponent,
+    SimpleModalComponent,
+    ModalTriggerDirective,
     CollapsibleWellComponent,
+
+
     DurationPipe
+
   ],
   imports: [
     BrowserModule,
@@ -49,8 +55,10 @@ declare let toastr: Toastr;
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
+
     {provide: TOASTR_TOKEN, useValue: toastr},
-    {provide: 'canDeactivateCreateEvent', useValue: checkDirtyState}
+    {provide: 'canDeactivateCreateEvent', useValue: checkDirtyState},
+    {provide: JQ_TOKEN, useValue: jQuery}
   ],
   bootstrap: [EventsAppComponent]
 })
